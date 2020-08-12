@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.srit.market.home.ui.more.ProfileModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        tools:context=".home.ui.more.MoreFragment">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{item.username}"
+            android:background="@android:color/white"
+            android:layout_marginTop="1dp"
+            android:elevation="1dp"
+            android:textColor="@android:color/black"
+            android:padding="10dp"
+            android:drawableStart="@drawable/ic_user"
+            android:drawablePadding="20dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{item.location}"
+            android:background="@android:color/white"
+            android:elevation="1dp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="1dp"
+            android:padding="10dp"
+            android:drawableStart="@drawable/ic_baseline_map_24"
+            android:drawablePadding="20dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{item.role}"
+            android:background="@android:color/white"
+            android:elevation="1dp"
+            android:layout_marginTop="1dp"
+            android:textColor="@android:color/black"
+            android:padding="10dp"
+            />
+
+
+        <TextView
+            android:id="@+id/sign_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SIGN OUT"
+            android:background="@android:color/white"
+            android:elevation="1dp"
+            android:layout_marginTop="1dp"
+            android:textColor="@android:color/holo_red_dark"
+            android:padding="10dp"
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change Password"
+            android:background="@android:color/white"
+            android:elevation="1dp"
+            android:layout_marginTop="50dp"
+            android:textColor="@android:color/black"
+            android:padding="10dp"
+            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="20dp"
+            android:drawableEnd="@drawable/ic_top_btn_white"
+
+            />
+    </LinearLayout>
+</layout>
