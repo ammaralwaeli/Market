@@ -6,14 +6,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class OrderModel implements Serializable {
-	private int orderID;
+	private int OrderID;
 	private String createdAt;
 	private int userID;
 	private String state;
 	private int totalPrice;
 
 	public int getOrderID(){
-		return orderID;
+		return OrderID;
 	}
 
 	public String getCreatedAt(){
@@ -50,7 +50,7 @@ public class OrderModel implements Serializable {
  	public String toString(){
 		return 
 			"OrderModel{" + 
-			"orderID = '" + orderID + '\'' + 
+			"orderID = '" + OrderID + '\'' +
 			",createdAt = '" + createdAt + '\'' + 
 			",userID = '" + userID + '\'' + 
 			",state = '" + state + '\'' + 

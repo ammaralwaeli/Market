@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="src"
+            type="String" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.section.homework.ImageViewerFragment">
+
+        <com.srit.market.home.ui.home.slider.TouchImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:srcUrl="@{src}"
+            tools:src="@drawable/logo"
+             />
+
+    </FrameLayout>
+</layout>

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import com.google.gson.JsonObject;
 import com.srit.market.R;
 import com.srit.market.databinding.FragmentLoginBinding;
+import com.srit.market.helpers.CustomSnackView;
 import com.srit.market.helpers.MyResponse;
 import com.srit.market.helpers.SharedPrefHelper;
 import com.srit.market.home.MainActivity;
@@ -63,10 +65,29 @@ public class LoginFragment extends Fragment {
                 setupViewModel();
             }
         });
+        binding.skipBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPrefHelper.getInstance().setAccessToken(null);
+                MainActivity.newInstance(getContext());
+            }
+        });
+    }
+
+    private Pair<String,Boolean> validation(){
+        if(binding.username.getText().toString().length()==0){
+            return new Pair<>("Please, Enter your username",false);
+        }
+        if(binding.password.getText().toString().length() ==0){
+            return new Pair<>("Please, Enter your password",false);
+        }
+
+        return new Pair("",true);
     }
 
     private void setupViewModel(){
-        if(true/*Validation*/){
+        Pair<String,Boolean> pair=validation();
+        if(pair.second){
             showProgressBar();
 
             final LoginViewModel loginViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
@@ -105,6 +126,8 @@ public class LoginFragment extends Fragment {
                         }
                     }
             );
+        }else{
+            CustomSnackView.showSnackBar(binding.loginLayout,pair.first,true);
         }
     }
 

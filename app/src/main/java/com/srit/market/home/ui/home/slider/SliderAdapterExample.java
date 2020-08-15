@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.srit.market.R;
+import com.srit.market.home.ui.home.item.ItemAdapter;
+import com.srit.market.home.ui.home.item.ItemModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,22 +24,24 @@ public class SliderAdapterExample extends
     private Context context;
     private List<SliderModel> mSliderItems = new ArrayList<>();
 
+
+    public ItemListener lestiner;
+
+    public interface ItemListener {
+        public void onImageClick(String src);
+    }
+
+    public void setListener(ItemListener listener) {
+        this.lestiner = listener;
+    }
+
+
     public SliderAdapterExample(Context context) {
         this.context = context;
     }
 
     public void renewItems(List<SliderModel> sliderItems) {
         this.mSliderItems = sliderItems;
-        notifyDataSetChanged();
-    }
-
-    public void deleteItem(int position) {
-        this.mSliderItems.remove(position);
-        notifyDataSetChanged();
-    }
-
-    public void addItem(SliderModel sliderItem) {
-        this.mSliderItems.add(sliderItem);
         notifyDataSetChanged();
     }
 
@@ -52,9 +56,6 @@ public class SliderAdapterExample extends
 
         SliderModel sliderItem = mSliderItems.get(position);
 
-        viewHolder.textViewDescription.setText(sliderItem.getId()+"");
-        viewHolder.textViewDescription.setTextSize(16);
-        viewHolder.textViewDescription.setTextColor(Color.WHITE);
         Glide.with(viewHolder.itemView)
                 .load(sliderItem.getPhoto())
                 .fitCenter()
@@ -63,7 +64,7 @@ public class SliderAdapterExample extends
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "This is item in position " + position, Toast.LENGTH_SHORT).show();
+                lestiner.onImageClick(mSliderItems.get(position).getPhoto());
             }
         });
     }
@@ -79,13 +80,11 @@ public class SliderAdapterExample extends
         View itemView;
         ImageView imageViewBackground;
         ImageView imageGifContainer;
-        TextView textViewDescription;
 
         public SliderAdapterVH(View itemView) {
             super(itemView);
             imageViewBackground = itemView.findViewById(R.id.iv_auto_image_slider);
             imageGifContainer = itemView.findViewById(R.id.iv_gif_container);
-            textViewDescription = itemView.findViewById(R.id.tv_auto_image_slider);
             this.itemView = itemView;
         }
     }

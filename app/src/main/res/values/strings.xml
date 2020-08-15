@@ -13,4 +13,8 @@
     <string name="back_to">Back to %1$s</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="dialog_gender_missiles">Please, select your gender.</string>
+
 </resources>

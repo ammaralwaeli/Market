@@ -3,6 +3,9 @@ package com.srit.market.home.ui.home;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,20 +16,25 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.srit.market.R;
 import com.srit.market.databinding.FragmentHomeBinding;
+import com.srit.market.helpers.CustomSnackView;
 import com.srit.market.helpers.MyResponse;
+import com.srit.market.helpers.SharedPrefHelper;
 import com.srit.market.home.MainActivity;
 import com.srit.market.home.ui.home.category.CatModel;
 import com.srit.market.home.ui.home.category.CategoryAdapter;
 import com.srit.market.home.ui.home.category.CategoryModel;
 import com.srit.market.home.ui.home.item.ItemsFragment;
+import com.srit.market.home.ui.home.slider.ImageViewerFragment;
 import com.srit.market.home.ui.home.slider.SliModel;
 import com.srit.market.home.ui.home.slider.SliderAdapterExample;
 import com.srit.market.home.ui.home.slider.SliderViewModel;
+import com.srit.market.home.ui.new_order.ShopingCartActivity;
 
 import java.util.Objects;
 
-public class HomeFragment extends Fragment implements CategoryAdapter.ItemListener {
+public class HomeFragment extends Fragment implements CategoryAdapter.ItemListener,SliderAdapterExample.ItemListener {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
@@ -37,12 +45,54 @@ public class HomeFragment extends Fragment implements CategoryAdapter.ItemListen
         binding.setLifecycleOwner(this);
         binding.recy.setLayoutManager(new GridLayoutManager(getContext(), 2));
         ((MainActivity) Objects.requireNonNull(getActivity())).setCustomTitle("Home");
+        if(SharedPrefHelper.getInstance().getAccessToken()!=null) {
+            setHasOptionsMenu(true);
+        }
         setupViewModel();
         setupSliderViewModel();
         return binding.getRoot();
     }
 
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.shopping_cart, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.shopping) {
+            ShopingCartActivity.newInstance(getContext());
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void showProgressBarForSlider(){
+        binding.progressBarContainer.setVisibility(View.VISIBLE);
+        binding.cvSliderMainActivity.setVisibility(View.GONE);
+    }
+
+    private void hideProgressBarForSlider(){
+        binding.progressBarContainer.setVisibility(View.GONE);
+        binding.cvSliderMainActivity.setVisibility(View.VISIBLE);
+    }
+
+    private void showProgressBarForRecycler(){
+        binding.progressBarContainer.setVisibility(View.VISIBLE);
+        binding.recy.setVisibility(View.GONE);
+    }
+
+    private void hideProgressBarForRecycler(){
+        binding.progressBarContainer.setVisibility(View.GONE);
+        binding.recy.setVisibility(View.VISIBLE);
+    }
+
+
     private void setupSliderViewModel(){
+        showProgressBarForSlider();
         final SliderViewModel sliderViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @SuppressWarnings("unchecked")
             @Override
@@ -67,12 +117,15 @@ public class HomeFragment extends Fragment implements CategoryAdapter.ItemListen
                         if (myResponse.getError() == null) {
                             sliderAdapter=new SliderAdapterExample(getContext());
                             sliderAdapter.renewItems(sliders.getResults());
+                            sliderAdapter.setListener(HomeFragment.this);
                             binding.imageSlider.setSliderAdapter(sliderAdapter);
                         } else {
                             // call failed.
                             String s = myResponse.getError();
                             Log.d("LoginError", s);
+                            CustomSnackView.showSnackBar(binding.homeLayout,s,true);
                         }
+                        hideProgressBarForSlider();
                     }
                 }
         );
@@ -80,6 +133,7 @@ public class HomeFragment extends Fragment implements CategoryAdapter.ItemListen
 
 
     private void setupViewModel(){
+        showProgressBarForRecycler();
         final HomeViewModel homeViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @SuppressWarnings("unchecked")
             @Override
@@ -109,7 +163,9 @@ public class HomeFragment extends Fragment implements CategoryAdapter.ItemListen
                             // call failed.
                             String s = myResponse.getError();
                             Log.d("LoginError", s);
+                            CustomSnackView.showSnackBar(binding.homeLayout,s,true);
                         }
+                        hideProgressBarForRecycler();
                     }
                 }
         );
@@ -118,5 +174,10 @@ public class HomeFragment extends Fragment implements CategoryAdapter.ItemListen
     @Override
     public void onItemClick(CategoryModel categoryModel) {
         ItemsFragment.newInstance(getParentFragmentManager(),categoryModel);
+    }
+
+    @Override
+    public void onImageClick(String src) {
+        ImageViewerFragment.newInstance(getParentFragmentManager(),src);
     }
 }

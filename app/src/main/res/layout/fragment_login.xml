@@ -14,6 +14,7 @@
         android:focusableInTouchMode="true">
 
         <LinearLayout
+            android:id="@+id/login_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/edit_text_padding"
                 android:layout_marginTop="10dp"
-                android:text="ahmed"
+                android:text="ammara"
                 android:layout_marginEnd="@dimen/edit_text_padding"
                 android:background="@drawable/bg_edit_text"
                 android:drawableStart="@drawable/ic_user"
@@ -100,6 +101,7 @@
 
 
                 <Button
+                    android:id="@+id/skip_btn"
                     android:layout_width="175dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

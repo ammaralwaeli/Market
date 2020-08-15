@@ -8,15 +8,35 @@
     </data>
 
         <LinearLayout
+            android:id="@+id/item_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             tools:context=".home.item.ItemFragment">
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_new_order" />
+                tools:listitem="@layout/item_category_item" />
+
+            <FrameLayout
+                android:id="@+id/progress_bar_container"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_height="match_parent">
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@android:color/black"
+                    android:visibility="visible" />
+            </FrameLayout>
         </LinearLayout>
 </layout>

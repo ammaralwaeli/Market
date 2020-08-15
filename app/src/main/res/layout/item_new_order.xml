@@ -4,10 +4,11 @@
     <data>
         <variable
             name="item"
-            type="com.srit.market.home.ui.home.item.ItemModel" />
+            type="com.srit.market.db.OrderItem" />
     </data>
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="3dp"
@@ -68,7 +69,7 @@
                     android:paddingTop="2dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="2dp"
-                    android:text="@{item.price}"
+                    android:text="@{item.totalPriceAsString}"
                     android:textColor="#0072FF"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -79,7 +80,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Discount : "
+                    android:text="Units : "
                     android:textColor="@android:color/black"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
@@ -96,22 +97,15 @@
                     android:paddingTop="2dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="2dp"
-                    android:text="@{item.discount}"
+                    android:text="@{item.itemCountAsString}"
                     android:textColor="#0072FF"
                     android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="2dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="2dp"
-                    android:text="متوفر"
-                    android:gravity="end|bottom"
-                    android:textColor="@android:color/white"
-                    android:background="@drawable/bg_text_exist"
-                    android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_supermarket"
+                    android:gravity="end|bottom" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

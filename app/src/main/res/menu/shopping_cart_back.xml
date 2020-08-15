@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <item
+        android:id="@+id/shopping"
+        android:icon="@drawable/ic_shopping_cart"
+        android:title="@string/orders"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+    <item
+        android:id="@+id/back"
+        android:icon="@drawable/ic_back"
+        android:title="@string/title_home"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+
+
+</menu>

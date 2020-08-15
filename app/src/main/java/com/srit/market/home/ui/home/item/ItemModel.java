@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class ItemModel implements Serializable {
 	private int price;
 	private String photo;
-	private String description;
+	private String Description;
 	private int isActive;
 	private int categoryID;
 	private int id;
@@ -22,7 +22,7 @@ public class ItemModel implements Serializable {
 	}
 
 	public String getDescription(){
-		return description;
+		return Description;
 	}
 
 	public int getIsActive(){
@@ -55,7 +55,7 @@ public class ItemModel implements Serializable {
 			"ItemModel{" + 
 			"price = '" + price + '\'' + 
 			",photo = '" + photo + '\'' + 
-			",description = '" + description + '\'' + 
+			",description = '" + Description + '\'' +
 			",isActive = '" + isActive + '\'' + 
 			",categoryID = '" + categoryID + '\'' + 
 			",id = '" + id + '\'' + 

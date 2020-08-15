@@ -3,6 +3,9 @@ package com.srit.market.home.ui.home.item;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,18 +19,24 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.srit.market.R;
 import com.srit.market.databinding.FragmentItemBinding;
+import com.srit.market.db.OrderItemRepository;
+import com.srit.market.helpers.CustomSnackView;
 import com.srit.market.helpers.MyResponse;
+import com.srit.market.helpers.SharedPrefHelper;
 import com.srit.market.home.MainActivity;
 import com.srit.market.home.ui.home.category.CategoryModel;
+import com.srit.market.home.ui.item_details.ItemDetailsFragment;
+import com.srit.market.home.ui.new_order.ShopingCartActivity;
 
 import java.util.Objects;
 
 
-public class ItemsFragment extends Fragment {
+public class ItemsFragment extends Fragment implements ItemAdapter.ItemListener {
 
     FragmentItemBinding binding;
     ItemAdapter adapter;
     static CategoryModel category;
+
 
     public ItemsFragment() {
         // Required empty public constructor
@@ -40,25 +49,49 @@ public class ItemsFragment extends Fragment {
         category = cat;
     }
 
-    /*
-        private void showProgressBar(){
-            binding.progressBar.setVisibility(View.VISIBLE);
-            binding.loginBtn.setText("");
-        }
+    private void showProgressBar() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.recy.setVisibility(View.GONE);
+    }
 
-        private void hideProgressBar(){
-            binding.progressBar.setVisibility(View.GONE);
-            binding.loginBtn.setText(getString(R.string.login_title));
-        }
-    */
+    private void hideProgressBar() {
+        binding.progressBar.setVisibility(View.GONE);
+        binding.recy.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupViewModel();
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(SharedPrefHelper.getInstance().getAccessToken()==null){
+            inflater.inflate(R.menu.back, menu);
+        }else {
+            inflater.inflate(R.menu.shopping_cart_back, menu);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.back) {
+            getActivity().onBackPressed();
+        } else if (item.getItemId() == R.id.shopping) {
+            if(!(new OrderItemRepository(getContext()).getItems().size()==0)){
+                ShopingCartActivity.newInstance(getContext());
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setupViewModel() {
 
+        showProgressBar();
 
         final ItemViewModel itemViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @SuppressWarnings("unchecked")
@@ -83,14 +116,14 @@ public class ItemsFragment extends Fragment {
                         }
                         if (myResponse.getError() == null) {
                             adapter = new ItemAdapter(getContext(), items.getItems());
-
+                            adapter.setListener(ItemsFragment.this);
                             binding.recy.setAdapter(adapter);
                         } else {
                             // call failed.
                             String s = myResponse.getError();
-                            Log.d("LoginError", s);
+                            CustomSnackView.showSnackBar(binding.itemLayout, s, true);
                         }
-                        //hideProgressBar();
+                        hideProgressBar();
                     }
                 }
         );
@@ -102,7 +135,15 @@ public class ItemsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentItemBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
+        setHasOptionsMenu(true);
         ((MainActivity) Objects.requireNonNull(getActivity())).setCustomTitle(category.getName());
         return binding.getRoot();
+    }
+
+    @Override
+    public void onItemClick(ItemModel itemModel) {
+        if (SharedPrefHelper.getInstance().getAccessToken() != null) {
+            ItemDetailsFragment.newInstance(getParentFragmentManager(), itemModel);
+        }
     }
 }

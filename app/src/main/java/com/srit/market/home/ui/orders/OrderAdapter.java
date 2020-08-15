@@ -2,6 +2,7 @@ package com.srit.market.home.ui.orders;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -9,8 +10,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.srit.market.R;
-import com.srit.market.databinding.ItemNewOrderBinding;
 import com.srit.market.databinding.ItemOrderBinding;
+import com.srit.market.home.ui.home.category.CategoryAdapter;
+import com.srit.market.home.ui.home.category.CategoryModel;
 
 import java.util.List;
 
@@ -18,6 +20,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     private List<OrderModel> modelList;
     private Context context;
+
+
+    ItemListener lestiner;
+
+    public interface ItemListener {
+        public void onItemClick(int orderId);
+    }
+
+    public void setListener(ItemListener listener) {
+        this.lestiner = listener;
+    }
 
 
     public OrderAdapter(Context context, List<OrderModel> list) {
@@ -33,8 +46,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             this.binding = binding;
         }
 
-        void bind(OrderModel dayModel) {
+        void bind(final OrderModel dayModel) {
             binding.setItem(dayModel);
+            binding.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    lestiner.onItemClick(dayModel.getOrderID());
+                }
+            });
             binding.hasPendingBindings();
         }
     }
