@@ -19,6 +19,9 @@ public class LoginViewModel extends ViewModel {
         mutableLiveData = loginRepository.login(loginModel);
     }
 
+    public void setMutableLiveDataNull(){
+        this.mutableLiveData=null;
+    }
     LiveData<MyResponse> getLoginRepository() {
         return mutableLiveData;
     }

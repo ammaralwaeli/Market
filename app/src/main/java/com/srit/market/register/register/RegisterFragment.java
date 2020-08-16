@@ -38,6 +38,7 @@ import org.w3c.dom.Text;
 public class RegisterFragment extends Fragment {
 
     FragmentRegisterBinding binding;
+    RegisterViewModel registerViewModel;
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -135,6 +136,9 @@ public class RegisterFragment extends Fragment {
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (registerViewModel!=null){
+                    registerViewModel.setMutableLiveDataNull();
+                }
                 setupViewModel();
             }
         });
@@ -162,7 +166,7 @@ public class RegisterFragment extends Fragment {
         Pair<String,Boolean> pair=validation();
         if(pair.second){
             showProgressBar();
-            final RegisterViewModel registerViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            registerViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
                 @SuppressWarnings("unchecked")
                 @Override
                 public <T extends ViewModel> T create(final Class<T> modelClass) {

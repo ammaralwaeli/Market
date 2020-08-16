@@ -19,7 +19,9 @@ public class RegisterViewModel extends ViewModel {
         RegisterRepository registerRepository = RegisterRepository.getInstance();
         mutableLiveData = registerRepository.register(registerModel);
     }
-
+    public void setMutableLiveDataNull(){
+        this.mutableLiveData=null;
+    }
     LiveData<MyResponse> getRegisterRepository() {
         return mutableLiveData;
     }

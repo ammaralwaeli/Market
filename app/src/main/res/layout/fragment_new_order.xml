@@ -99,7 +99,7 @@
                     android:layout_gravity="center"
                     android:indeterminate="true"
                     android:indeterminateTint="@android:color/white"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

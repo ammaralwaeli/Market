@@ -29,6 +29,7 @@ import com.srit.market.register.register.RegisterFragment;
 public class LoginFragment extends Fragment {
 
     FragmentLoginBinding binding;
+    LoginViewModel loginViewModel;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -62,6 +63,9 @@ public class LoginFragment extends Fragment {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(loginViewModel!=null){
+                    loginViewModel.setMutableLiveDataNull();
+                }
                 setupViewModel();
             }
         });
@@ -90,7 +94,7 @@ public class LoginFragment extends Fragment {
         if(pair.second){
             showProgressBar();
 
-            final LoginViewModel loginViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            loginViewModel  = new ViewModelProvider(this, new ViewModelProvider.Factory() {
                 @SuppressWarnings("unchecked")
                 @Override
                 public <T extends ViewModel> T create(final Class<T> modelClass) {
@@ -121,6 +125,7 @@ public class LoginFragment extends Fragment {
                                 // call failed.
                                 String s = myResponse.getError();
                                 Log.d("LoginError", s);
+                                CustomSnackView.showSnackBar(binding.loginLayout,s,true);
                             }
                             hideProgressBar();
                         }
