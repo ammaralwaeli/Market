@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.srit.market.R;
 import com.srit.market.databinding.FragmentHomeBinding;
+import com.srit.market.db.OrderItemRepository;
 import com.srit.market.helpers.CustomSnackView;
 import com.srit.market.helpers.MyResponse;
 import com.srit.market.helpers.SharedPrefHelper;
@@ -36,15 +37,21 @@ import java.util.Objects;
 
 public class HomeFragment extends Fragment implements CategoryAdapter.ItemListener,SliderAdapterExample.ItemListener {
 
-    private HomeViewModel homeViewModel;
+
     private FragmentHomeBinding binding;
     private SliderAdapterExample sliderAdapter;
     CategoryAdapter adapter;
+    String title;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
         binding.recy.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        ((MainActivity) Objects.requireNonNull(getActivity())).setCustomTitle("Home");
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            title=getString(R.string.ar_home_title);
+        }else{
+            title=getString(R.string.en_home_titile);
+        }
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCustomTitle(title);
         if(SharedPrefHelper.getInstance().getAccessToken()!=null) {
             setHasOptionsMenu(true);
         }
@@ -64,7 +71,9 @@ public class HomeFragment extends Fragment implements CategoryAdapter.ItemListen
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.shopping) {
-            ShopingCartActivity.newInstance(getContext());
+            if(new OrderItemRepository(getContext()).getItems().size()!=0) {
+                ShopingCartActivity.newInstance(getContext());
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -21,13 +21,16 @@ import android.view.ViewGroup;
 import com.google.gson.JsonObject;
 import com.srit.market.R;
 import com.srit.market.databinding.FragmentOrderDetailsBinding;
+import com.srit.market.helpers.CustomSnackView;
 import com.srit.market.helpers.MyResponse;
+import com.srit.market.helpers.SharedPrefHelper;
 
 public class OrderDetailsFragment extends Fragment {
 
     FragmentOrderDetailsBinding binding;
     static int orderId;
     OrderDetailsAdapter adapter;
+    String requestError;
     public OrderDetailsFragment() {
         // Required empty public constructor
     }
@@ -112,6 +115,7 @@ public class OrderDetailsFragment extends Fragment {
                                 // call failed.
                                 String s = myResponse.getError();
                                 Log.d("LoginError", s);
+                                CustomSnackView.showSnackBar(binding.totalLayout,requestError,true);
                             }
                             hideProgressBar();
                         }
@@ -125,6 +129,11 @@ public class OrderDetailsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentOrderDetailsBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            requestError=getString(R.string.ar_connection_error);
+        }else {
+            requestError=getString(R.string.en_connection_error);
+        }
         return binding.getRoot();
     }
 }

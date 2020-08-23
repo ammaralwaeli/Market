@@ -28,6 +28,7 @@ import com.srit.market.helpers.CustomSnackView;
 import com.srit.market.helpers.MyResponse;
 import com.srit.market.helpers.SharedPrefHelper;
 import com.srit.market.home.MainActivity;
+import com.srit.market.home.ui.more.MoreFragment;
 import com.srit.market.home.ui.new_order.ShopingCartActivity;
 import com.srit.market.register.login.LoginFragment;
 import com.srit.market.register.login.LoginModel;
@@ -38,8 +39,46 @@ public class ChangePasswordFragment extends Fragment {
 
     FragmentChangePasswordBinding binding;
 
+    String title, enter, please, newPassword, oldPassword, confirmPassword, not_matched, requestError,requestSuccess;
+
     public ChangePasswordFragment() {
         // Required empty public constructor
+    }
+
+    private void setLanguage() {
+        if (SharedPrefHelper.getInstance().getLanguage()) {
+
+            title = getString(R.string.ar_change_password);
+            enter = getString(R.string.ar_enter);
+            please = getString(R.string.ar_please);
+            newPassword = getString(R.string.ar_new_password);
+            oldPassword = getString(R.string.ar_old_password);
+            confirmPassword = getString(R.string.ar_confirm_password);
+            not_matched = getString(R.string.ar_pass_not_mathced);
+            requestError = getString(R.string.ar_connection_error);
+            requestSuccess = getString(R.string.ar_pass_changed_success);
+            binding.confirmPassword.setHint(confirmPassword);
+            binding.newPassword.setHint(newPassword);
+            binding.oldPassword.setHint(oldPassword);
+            binding.changePasswordBtn.setText(title);
+            binding.changePasswordLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        } else {
+
+            title = getString(R.string.en_change_password);
+            enter = getString(R.string.en_enter);
+            please = getString(R.string.en_please);
+            newPassword = getString(R.string.en_new_password);
+            oldPassword = getString(R.string.en_old_password);
+            confirmPassword = getString(R.string.en_confirm_password);
+            not_matched = getString(R.string.en_pass_not_mathced);
+            requestError = getString(R.string.en_connection_error);
+            requestSuccess = getString(R.string.en_pass_changed_success);
+            binding.confirmPassword.setHint(confirmPassword);
+            binding.newPassword.setHint(newPassword);
+            binding.oldPassword.setHint(oldPassword);
+            binding.changePasswordBtn.setText(title);
+            binding.changePasswordLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
     }
 
     public static void newInstance(FragmentManager fr) {
@@ -55,7 +94,7 @@ public class ChangePasswordFragment extends Fragment {
 
     private void hideProgressBar() {
         binding.progressBar.setVisibility(View.GONE);
-        binding.changePasswordBtn.setText("Change Password");
+        binding.changePasswordBtn.setText(title);
     }
 
 
@@ -68,7 +107,7 @@ public class ChangePasswordFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.back) {
-            getActivity().onBackPressed();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -88,17 +127,17 @@ public class ChangePasswordFragment extends Fragment {
 
     private Pair<String, Boolean> validation() {
         if (binding.oldPassword.getText().toString().length() == 0) {
-            return new Pair<>("Please, Enter your old Password", false);
+            return new Pair<>(please.concat(enter.concat(oldPassword)), false);
         }
         if (binding.newPassword.getText().toString().length() == 0) {
-            return new Pair<>("Please, Enter your new password", false);
+            return new Pair<>(please.concat(enter.concat(newPassword)), false);
         }
         if (binding.confirmPassword.getText().toString().length() == 0) {
-            return new Pair<>("Please, Enter confirm your password", false);
+            return new Pair<>(please.concat(confirmPassword), false);
         }
 
         if (!binding.confirmPassword.getText().toString().equals(binding.newPassword.getText().toString())) {
-            return new Pair<>("Password not matched!", false);
+            return new Pair<>(not_matched, false);
         }
 
         return new Pair("", true);
@@ -134,12 +173,12 @@ public class ChangePasswordFragment extends Fragment {
                                 return;
                             }
                             if (myResponse.getError() == null) {
-                                CustomSnackView.showSnackBar(binding.changePasswordLayout, jsonObject.get("message").getAsString(), false);
+                                CustomSnackView.showSnackBar(binding.changePasswordLayout, requestSuccess, false);
                             } else {
                                 // call failed.
                                 String s = myResponse.getError();
                                 Log.d("LoginError", s);
-                                CustomSnackView.showSnackBar(binding.changePasswordLayout, s, true);
+                                CustomSnackView.showSnackBar(binding.changePasswordLayout, requestError, true);
                             }
                             hideProgressBar();
                         }
@@ -156,6 +195,7 @@ public class ChangePasswordFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentChangePasswordBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
+        setLanguage();
         return binding.getRoot();
     }
 }

@@ -32,13 +32,29 @@ public class OrdersFragment extends Fragment implements OrderAdapter.ItemListene
     private OrdersViewModel ordersViewModel;
     private FragmentOrdersBinding binding;
     OrderAdapter adapter;
+    String title,notAuth,requestError;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentOrdersBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
-        ((MainActivity) Objects.requireNonNull(getActivity())).setCustomTitle(getString(R.string.orders));
+        setLanguage();
+        ((MainActivity) Objects.requireNonNull(getActivity())).setCustomTitle(title);
         setupViewModel();
         return binding.getRoot();
+    }
+
+    private void setLanguage(){
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            binding.orderLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            title=getString(R.string.ar_orders);
+            notAuth=getString(R.string.ar_not_auth);
+            requestError=getString(R.string.ar_connection_error);
+        }else{
+            binding.orderLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            title=getString(R.string.orders);
+            notAuth=getString(R.string.en_not_auth);
+            requestError=getString(R.string.en_connection_error);
+        }
     }
 
     private void showProgressBar(){
@@ -56,7 +72,7 @@ public class OrdersFragment extends Fragment implements OrderAdapter.ItemListene
         super.onActivityCreated(savedInstanceState);
         if (SharedPrefHelper.getInstance().getAccessToken() == null) {
             binding.recy.setVisibility(View.GONE);
-            CustomSnackView.showSnackBar(binding.orderLayout, "Must Login", true);
+            CustomSnackView.showSnackBar(binding.orderLayout, notAuth, true);
             getActivity().onBackPressed();
         }
     }
@@ -93,7 +109,7 @@ public class OrdersFragment extends Fragment implements OrderAdapter.ItemListene
                             // call failed.
                             String s = myResponse.getError();
                             Log.d("LoginError", s);
-                            CustomSnackView.showSnackBar(binding.orderLayout,s,true);
+                            CustomSnackView.showSnackBar(binding.orderLayout,requestError,true);
                         }
                         hideProgressBar();
                     }

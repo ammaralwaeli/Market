@@ -8,9 +8,9 @@ public class RegisterModel implements Serializable {
 	private String password;
 	private String adress;
 	private String gender;
-	private int phone;
+	private long phone;
 
-	public RegisterModel(String username, String password, String adress, String gender, int phone) {
+	public RegisterModel(String username, String password, String adress, String gender, long phone) {
 		this.username = username;
 		this.password = password;
 		this.adress = adress;
@@ -34,7 +34,7 @@ public class RegisterModel implements Serializable {
 		return gender;
 	}
 
-	public int getPhone(){
+	public long getPhone(){
 		return phone;
 	}
 

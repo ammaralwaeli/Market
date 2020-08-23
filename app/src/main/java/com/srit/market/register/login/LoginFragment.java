@@ -30,6 +30,7 @@ public class LoginFragment extends Fragment {
 
     FragmentLoginBinding binding;
     LoginViewModel loginViewModel;
+    String title,username,password,requestError;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -47,7 +48,7 @@ public class LoginFragment extends Fragment {
 
     private void hideProgressBar(){
         binding.progressBar.setVisibility(View.GONE);
-        binding.loginBtn.setText(getString(R.string.login_title));
+        binding.loginBtn.setText(title);
     }
 
     @Override
@@ -80,10 +81,10 @@ public class LoginFragment extends Fragment {
 
     private Pair<String,Boolean> validation(){
         if(binding.username.getText().toString().length()==0){
-            return new Pair<>("Please, Enter your username",false);
+            return new Pair<>(username,false);
         }
         if(binding.password.getText().toString().length() ==0){
-            return new Pair<>("Please, Enter your password",false);
+            return new Pair<>(password,false);
         }
 
         return new Pair("",true);
@@ -121,11 +122,12 @@ public class LoginFragment extends Fragment {
                                 SharedPrefHelper.getInstance().setAccessToken(token);
                                 MainActivity.newInstance(getContext());
                                 Log.d("token", token);
+                                getActivity().finish();
                             } else {
                                 // call failed.
                                 String s = myResponse.getError();
                                 Log.d("LoginError", s);
-                                CustomSnackView.showSnackBar(binding.loginLayout,s,true);
+                                CustomSnackView.showSnackBar(binding.loginLayout,requestError,true);
                             }
                             hideProgressBar();
                         }
@@ -136,8 +138,36 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    private void setLanguage(){
+        //true -> arabic
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            binding.loginLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.username.setHint(R.string.ar_username);
+            binding.password.setHint(R.string.ar_password);
+            binding.password.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            binding.skipBtn.setText(R.string.ar_skip);
+            binding.loginBtn.setText(R.string.ar_login_title);
+            binding.registerBtn.setText(R.string.ar_register_title);
+            title = getString(R.string.ar_login_title);
+            username = getString(R.string.ar_enter_username);
+            password = getString(R.string.ar_enter_password);
+            requestError=getString(R.string.ar_connection_error);
+        }else{
+            binding.loginLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            title = getString(R.string.en_login_title);
+            binding.username.setHint(R.string.username);
+            binding.password.setHint(R.string.password);
+            binding.skipBtn.setText(R.string.skip);
+            binding.loginBtn.setText(R.string.en_login_title);
+            binding.registerBtn.setText(R.string.register_title);
+            username = getString(R.string.en_enter_username);
+            password = getString(R.string.en_enter_password);
+            requestError=getString(R.string.en_connection_error);
+        }
+    }
+
     public void goToRegister(){
-        RegisterFragment.newInstance(getFragmentManager());
+        RegisterFragment.newInstance(getParentFragmentManager());
     }
 
     @Override
@@ -145,6 +175,7 @@ public class LoginFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
+        setLanguage();
         return binding.getRoot();
     }
 }

@@ -9,8 +9,7 @@ public class SharedPrefHelper {
 
     private static String PREF_NAME = "mySettingsPref";
     private static String ACCESS_TOKEN = "ACCESS_TOKEN";
-    private static String IS_REGISTER = "IS_REGISTER";
-    private static String IS_VERIFICATION = "IS_VERIFICATION";
+    private static String LANGUAGE = "LANGUAGE";
 
     public static void init(Context context) {
         instance= new SharedPrefHelper(context);
@@ -29,20 +28,12 @@ public class SharedPrefHelper {
     }
 
 
-    public boolean getIsRegister() {
-        return mSharedPreferences.getBoolean(IS_REGISTER,false);
+    public boolean getLanguage() {
+        return mSharedPreferences.getBoolean(LANGUAGE,false);
     }
 
-    public void setIsRegister(boolean isRegister) {
-        mSharedPreferences.edit().putBoolean(IS_REGISTER, isRegister).apply();
-    }
-
-    public boolean getIsVerification() {
-        return mSharedPreferences.getBoolean(IS_VERIFICATION,false);
-    }
-
-    public void setIsVerification(boolean isVerification) {
-        mSharedPreferences.edit().putBoolean(IS_VERIFICATION, isVerification).apply();
+    public void setLanguage(boolean isRegister) {
+        mSharedPreferences.edit().putBoolean(LANGUAGE, isRegister).apply();
     }
 
     public String getAccessToken(){

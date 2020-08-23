@@ -15,9 +15,6 @@ public class ShopingCartActivity extends AppCompatActivity {
 
     ActivityShopingCartBinding binding;
 
-
-
-
     public static void newInstance(Context context) {
 
         Intent in = new Intent(context, ShopingCartActivity.class);

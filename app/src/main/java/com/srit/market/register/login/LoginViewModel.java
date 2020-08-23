@@ -22,7 +22,7 @@ public class LoginViewModel extends ViewModel {
     public void setMutableLiveDataNull(){
         this.mutableLiveData=null;
     }
-    LiveData<MyResponse> getLoginRepository() {
+    public LiveData<MyResponse> getLoginRepository() {
         return mutableLiveData;
     }
 }

@@ -1,6 +1,11 @@
 package com.srit.market.home.ui.new_order;
 
+import android.graphics.Shader;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,31 +14,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.room.FtsOptions;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.google.gson.JsonObject;
 import com.srit.market.R;
-import com.srit.market.databinding.FragmentLoginBinding;
 import com.srit.market.databinding.FragmentNewOrderBinding;
 import com.srit.market.db.OrderItem;
 import com.srit.market.db.OrderItemRepository;
 import com.srit.market.helpers.CustomSnackView;
 import com.srit.market.helpers.MyResponse;
 import com.srit.market.helpers.SharedPrefHelper;
-import com.srit.market.home.MainActivity;
-import com.srit.market.home.ui.home.HomeFragment;
-import com.srit.market.home.ui.home.HomeViewModel;
-import com.srit.market.home.ui.home.category.CatModel;
-import com.srit.market.home.ui.home.category.CategoryAdapter;
-import com.srit.market.register.login.LoginFragment;
-import com.srit.market.register.login.LoginModel;
-import com.srit.market.register.login.LoginViewModel;
-import com.srit.market.register.register.RegisterFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +32,31 @@ public class NewOrderFragment extends Fragment {
     FragmentNewOrderBinding binding;
     List<OrderItem> items;
     ArrayList<Integer> itemId,itemCount;
+
+    String title,buy,sent,requestError;
+
     public NewOrderFragment() {
         // Required empty public constructor
+    }
+
+    private void setLanguage(){
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            binding.newOrderLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.buyBtn.setText(R.string.ar_buy);
+            binding.countHeader.setText(R.string.ar_total_count);
+            binding.totalHeader.setText(getString(R.string.ar_total_price));
+            title = getString(R.string.ae_cart);
+            sent=getString(R.string.ar_sent_success);
+            requestError=getString(R.string.ar_connection_error);
+        } else{
+            binding.newOrderLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            binding.buyBtn.setText(R.string.en_buy);
+            binding.countHeader.setText(R.string.en_total_count);
+            binding.totalHeader.setText(R.string.en_total_price);
+            title = getString(R.string.en_cart);
+            sent=getString(R.string.en_sent_success);
+            requestError=getString(R.string.en_connection_error);
+        }
     }
 
     public static void newInstance(FragmentManager fr) {
@@ -53,17 +64,7 @@ public class NewOrderFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
-/*
-    private void showProgressBar(){
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.loginBtn.setText("");
-    }
 
-    private void hideProgressBar(){
-        binding.progressBar.setVisibility(View.GONE);
-        binding.loginBtn.setText(getString(R.string.login_title));
-    }
-*/
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -113,7 +114,7 @@ public class NewOrderFragment extends Fragment {
 
     private void hideProgressBar(){
         binding.progressBar.setVisibility(View.GONE);
-        binding.buyBtn.setText("Buy");
+        binding.buyBtn.setText(buy);
     }
 
     private void setupViewModel(){
@@ -141,7 +142,7 @@ public class NewOrderFragment extends Fragment {
                         if (myResponse.getError() == null) {
                             OrderItemRepository orderItemRepository=new OrderItemRepository(getContext());
                             List<OrderItem> items=orderItemRepository.getItems();
-                            CustomSnackView.showSnackBar(binding.newOrderLayout,"Order Sent Successfully",false);
+                            CustomSnackView.showSnackBar(binding.newOrderLayout,sent,false);
                             for (OrderItem item:items){
                                 orderItemRepository.deleteItem(item);
                                 getActivity().onBackPressed();
@@ -150,7 +151,7 @@ public class NewOrderFragment extends Fragment {
                             // call failed.
                             String s = myResponse.getError();
                             Log.d("LoginError", s);
-                            CustomSnackView.showSnackBar(binding.newOrderLayout,s,true);
+                            CustomSnackView.showSnackBar(binding.newOrderLayout,requestError,true);
                         }
                         hideProgressBar();
                     }
@@ -164,7 +165,8 @@ public class NewOrderFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentNewOrderBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
-        ((ShopingCartActivity) Objects.requireNonNull(getActivity())).setCustomTitle("Cart");
+        setLanguage();
+        ((ShopingCartActivity) Objects.requireNonNull(getActivity())).setCustomTitle(title);
         binding.buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

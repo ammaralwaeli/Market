@@ -15,8 +15,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".home.ui.new_order.ShopingCartActivity"></activity>
         <activity
-            android:name=".home.MainActivity"
-            android:label="@string/title_activity_main" />
+            android:name=".home.MainActivity"/>
         <activity android:name=".register.RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

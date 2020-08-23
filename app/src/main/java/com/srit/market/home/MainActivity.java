@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,18 +37,31 @@ public class MainActivity extends AppCompatActivity {
         context.startActivity(in);
     }
 
-
+    BottomNavigationView navView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        BottomNavigationView navView = binding.navView;
+        navView = binding.navView;
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
-
         setSupportActionBar(binding.toolbar);
+        setLanguage();
 
+    }
 
+    public void setLanguage(){
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            binding.container.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            navView.getMenu().getItem(0).setTitle(getString(R.string.ar_home_title));
+            navView.getMenu().getItem(1).setTitle(getString(R.string.ar_orders));
+            navView.getMenu().getItem(2).setTitle(getString(R.string.ar_more_title));
+        }else{
+            binding.container.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            navView.getMenu().getItem(0).setTitle(getString(R.string.title_home));
+            navView.getMenu().getItem(1).setTitle(getString(R.string.orders));
+            navView.getMenu().getItem(2).setTitle(getString(R.string.en_more_title));
+        }
     }
 
     public void setCustomTitle(String title) {

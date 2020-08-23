@@ -63,12 +63,24 @@ public class ItemDetailsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         binding.setItem(item);
     }
+    private void setLanguage(){
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            binding.itemDetailsLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.addToCartBtn.setText(getString(R.string.ar_add_to_cart));
+            binding.description.setText(R.string.ar_description);
+        }else{
+            binding.itemDetailsLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            binding.addToCartBtn.setText(getString(R.string.en_add_to_cart));
+            binding.description.setText(R.string.description);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentItemDetailsBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
+        setLanguage();
         ((MainActivity) Objects.requireNonNull(getActivity())).setCustomTitle(item.getItemName());
         setHasOptionsMenu(true);
         binding.addToCartBtn.setOnClickListener(new View.OnClickListener() {

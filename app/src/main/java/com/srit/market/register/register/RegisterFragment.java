@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -19,9 +18,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.srit.market.R;
 import com.srit.market.databinding.FragmentRegisterBinding;
@@ -33,12 +30,13 @@ import com.srit.market.register.login.LoginFragment;
 import com.srit.market.register.login.LoginModel;
 import com.srit.market.register.login.LoginViewModel;
 
-import org.w3c.dom.Text;
-
 public class RegisterFragment extends Fragment {
 
     FragmentRegisterBinding binding;
     RegisterViewModel registerViewModel;
+
+    String title,username8,username0, password6,password0,selectGender,enterAddress,phone0,wrongPhone,male,female,requestError;
+
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -56,40 +54,89 @@ public class RegisterFragment extends Fragment {
 
     private void hideProgressBar(){
         binding.progressBar.setVisibility(View.GONE);
-        binding.registerBtn.setText(getString(R.string.register_title));
+        binding.registerBtn.setText(title);
+    }
+
+    private void setLanguage(){
+        if (SharedPrefHelper.getInstance().getLanguage()){
+            binding.registerLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            binding.phone.setHint(R.string.ar_phone);
+            binding.phone.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            binding.address.setHint(R.string.ar_address);
+            binding.gender.setText(R.string.ar_gender);
+            binding.password.setHint(R.string.ar_password);
+            binding.username.setHint(R.string.ar_username);
+            binding.password.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            binding.registerBtn.setText(R.string.ar_register_title);
+            binding.backToLoginBtn.setText(R.string.ar_back_to_login);
+            title=getString(R.string.ar_register_title);
+            username0 = getString(R.string.ar_enter_username);
+            username8 = getString(R.string.ar_little_username);
+            password0 = getString(R.string.ar_enter_password);
+            password6 = getString(R.string.ar_little_password);
+            selectGender=getString(R.string.ar_select_gender);
+            enterAddress=getString(R.string.ar_enter_address);
+            phone0=getString(R.string.ar_enter_phone);
+            wrongPhone=getString(R.string.ar_wrong_phone);
+            male=getString(R.string.ar_male);
+            female=getString(R.string.ar_female);
+            requestError=getString(R.string.ar_connection_error);
+        }else{
+
+            binding.registerLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            binding.phone.setHint(R.string.en_phone);
+            binding.address.setHint(R.string.en_address);
+            binding.gender.setText(R.string.en_gender);
+            binding.password.setHint(R.string.password);
+            binding.username.setHint(R.string.username);
+            binding.registerBtn.setText(R.string.register_title);
+            binding.backToLoginBtn.setText(R.string.back_to_login);
+            title=getString(R.string.register_title);
+            username0 = getString(R.string.en_enter_username);
+            username8 = getString(R.string.en_little_username);
+            password0 = getString(R.string.en_enter_password);
+            password6 = getString(R.string.en_little_password);
+            selectGender=getString(R.string.en_select_gender);
+            enterAddress=getString(R.string.en_enter_address);
+            phone0=getString(R.string.en_enter_phone);
+            wrongPhone=getString(R.string.en_wrong_phone);
+            male=getString(R.string.en_male);
+            female=getString(R.string.en_female);
+            requestError=getString(R.string.en_connection_error);
+        }
     }
 
 
     private Pair<String,Boolean> validation(){
         if(binding.username.getText().toString().length()<8){
-            return new Pair<>("Username must be over than 8 chars",false);
+            return new Pair<>(username8,false);
         }
 
         if(binding.username.getText().toString().length()==0){
-            return new Pair<>("Please, Enter your username",false);
+            return new Pair<>(username0,false);
         }
         if(binding.password.getText().toString().length() <6){
-            return new Pair<>("Password must be over than 6 chars",false);
+            return new Pair<>(password6,false);
         }
 
         if(binding.password.getText().toString().length() ==0){
-            return new Pair<>("Please, Enter your password",false);
+            return new Pair<>(password0,false);
         }
 
         if(binding.gender.getText().toString().length() ==0){
-            return new Pair<>("Please, Select your gender",false);
+            return new Pair<>(selectGender,false);
         }
 
         if(binding.address.getText().toString().length() ==0){
-            return new Pair<>("Please, Enter your address",false);
+            return new Pair<>(enterAddress,false);
         }
 
         if(binding.phone.getText().toString().length() ==0){
-            return new Pair<>("Please, Enter your Phone",false);
+            return new Pair<>(phone0,false);
         }
 
         if(!isValidPhone()){
-            return new Pair<>("Please, Enter your Phone in this form 07*********",false);
+            return new Pair<>(wrongPhone,false);
         }
         return new Pair("",true);
     }
@@ -109,13 +156,13 @@ public class RegisterFragment extends Fragment {
 
     private AlertDialog  createDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.dialog_gender_missiles)
-                .setPositiveButton("MALE", new DialogInterface.OnClickListener() {
+        builder.setMessage(selectGender)
+                .setPositiveButton(male, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         binding.gender.setText("MALE");
                     }
                 })
-                .setNegativeButton("FEMALE", new DialogInterface.OnClickListener() {
+                .setNegativeButton(female, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         binding.gender.setText("FEMALE");
                     }
@@ -157,10 +204,55 @@ public class RegisterFragment extends Fragment {
 
             }
         });
+        binding.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPrefHelper.getInstance().setLanguage(false);
+                setLanguage();
+            }
+        });
     }
 
 
+    private void login(){
 
+       LoginViewModel loginViewModel  = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public <T extends ViewModel> T create(final Class<T> modelClass) {
+                if (modelClass.equals(LoginViewModel.class)) {
+                    return (T) new LoginViewModel();
+                } else {
+                    return null;
+                }
+            }
+        }).get(LoginViewModel.class);
+        LoginModel loginModel=new LoginModel(binding.username.getText().toString(),binding.password.getText().toString());
+        loginViewModel.init(loginModel);
+        loginViewModel.getLoginRepository().observe(RegisterFragment.this, new Observer<MyResponse>() {
+                    @Override
+                    public void onChanged(MyResponse myResponse) {
+
+                        JsonObject jsonObject=(JsonObject) myResponse.getPosts();
+                        if (myResponse == null) {
+                            Log.d("LoginError", "null");
+                            return;
+                        }
+                        if (myResponse.getError() == null) {
+                            String token =  jsonObject.get("token").getAsString();
+                            SharedPrefHelper.getInstance().setAccessToken(token);
+                            MainActivity.newInstance(getContext());
+                            Log.d("token", token);
+                        } else {
+                            // call failed.
+                            String s = myResponse.getError();
+                            Log.d("LoginError", s);
+                            CustomSnackView.showSnackBar(binding.registerLayout,requestError,true);
+                        }
+                    }
+                }
+        );
+    }
 
     private void setupViewModel(){
         Pair<String,Boolean> pair=validation();
@@ -181,7 +273,8 @@ public class RegisterFragment extends Fragment {
                     binding.password.getText().toString(),
                     binding.address.getText().toString(),
                     binding.gender.getText().toString(),
-                    Integer.parseInt(binding.phone.getText().toString()));
+                    Long.parseLong(binding.phone.getText().toString()));
+
             registerViewModel.init(registerModel);
             registerViewModel.getRegisterRepository().observe(RegisterFragment.this, new Observer<MyResponse>() {
                         @Override
@@ -192,10 +285,8 @@ public class RegisterFragment extends Fragment {
                                 return;
                             }
                             if (myResponse.getError() == null) {
-                                String token =  jsonObject.get("token").getAsString();
-                                SharedPrefHelper.getInstance().setAccessToken(token);
-                                MainActivity.newInstance(getContext());
-                                Log.d("token", token);
+                                login();
+                                getActivity().finish();
                             } else {
                                 // call failed.
                                 String s = myResponse.getError();
@@ -212,7 +303,7 @@ public class RegisterFragment extends Fragment {
     }
 
     public void goToLogin(){
-        LoginFragment.newInstance(getFragmentManager());
+        LoginFragment.newInstance(getParentFragmentManager());
     }
 
     @Override
@@ -220,6 +311,7 @@ public class RegisterFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentRegisterBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(this);
+        setLanguage();
         return binding.getRoot();
     }
 }

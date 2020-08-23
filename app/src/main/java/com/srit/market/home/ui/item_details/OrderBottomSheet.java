@@ -9,9 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.srit.market.R;
 import com.srit.market.databinding.BottomSheetAddOrderBinding;
 import com.srit.market.db.OrderItem;
 import com.srit.market.db.OrderItemRepository;
+import com.srit.market.helpers.SharedPrefHelper;
 import com.srit.market.home.ui.home.item.ItemModel;
 
 public class OrderBottomSheet extends BottomSheetDialogFragment {
@@ -19,6 +21,8 @@ public class OrderBottomSheet extends BottomSheetDialogFragment {
     private int numOfItems = 1;
     private int totalPrice = 0;
     static ItemModel itemModel;
+
+    String total;
 
     public static OrderBottomSheet newInstance(ItemModel item) {
         itemModel = item;
@@ -30,7 +34,16 @@ public class OrderBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = BottomSheetAddOrderBinding.inflate(inflater, container, false);
         totalPrice = recalculatePrice();
-        binding.header.setText("Total Price : " + totalPrice);
+        if(SharedPrefHelper.getInstance().getLanguage()){
+            total=getString(R.string.ar_total_price);
+            binding.addBtn.setText(R.string.ar_add_to_cart);
+
+        }
+        else{
+            total=getString(R.string.en_total_price);
+            binding.addBtn.setText(R.string.en_add_to_cart);
+        }
+        binding.header.setText(total.concat(totalPrice+""));
 
         setListener();
         binding.addBtn.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +81,7 @@ public class OrderBottomSheet extends BottomSheetDialogFragment {
                 }
                 numOfItems--;
                 totalPrice=recalculatePrice();
-                binding.header.setText("Total Price : " + totalPrice);
+                binding.header.setText(total.concat(totalPrice+""));
                 binding.numOfItems.setText(numOfItems + "");
             }
         });
@@ -78,7 +91,7 @@ public class OrderBottomSheet extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 numOfItems++;
                 totalPrice=recalculatePrice();
-                binding.header.setText("Total Price : " + totalPrice);
+                binding.header.setText(total.concat(totalPrice+""));
                 binding.numOfItems.setText(numOfItems + "");
             }
         });
