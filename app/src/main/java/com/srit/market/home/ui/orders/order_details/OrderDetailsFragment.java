@@ -131,8 +131,12 @@ public class OrderDetailsFragment extends Fragment {
         binding.setLifecycleOwner(this);
         if(SharedPrefHelper.getInstance().getLanguage()){
             requestError=getString(R.string.ar_connection_error);
+            binding.totalHeader.setText(R.string.ar_total_price);
+            binding.countHeader.setText(R.string.ar_total_count);
         }else {
             requestError=getString(R.string.en_connection_error);
+            binding.totalHeader.setText(R.string.en_total_price);
+            binding.countHeader.setText(R.string.en_total_count);
         }
         return binding.getRoot();
     }

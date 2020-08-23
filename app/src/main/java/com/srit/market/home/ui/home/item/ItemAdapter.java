@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.srit.market.R;
 import com.srit.market.databinding.ItemCategoryItemBinding;
+import com.srit.market.helpers.SharedPrefHelper;
 
 import java.util.List;
 
@@ -61,6 +62,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         ItemCategoryItemBinding binding =
                 DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
                         R.layout.item_category_item, viewGroup, false);
+        if (SharedPrefHelper.getInstance().getLanguage()){
+            binding.discount.setText(R.string.ar_discount);
+            binding.price.setText(R.string.ar_price);
+        }else{
+            binding.discount.setText(R.string.en_discount);
+            binding.price.setText(R.string.en_price);
+        }
         return new ItemAdapter.ViewHolder(binding);
     }
 

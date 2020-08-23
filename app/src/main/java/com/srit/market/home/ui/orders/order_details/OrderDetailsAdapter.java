@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.srit.market.R;
 import com.srit.market.databinding.ItemOrderBinding;
 import com.srit.market.databinding.ItemOrderDetailsBinding;
+import com.srit.market.helpers.SharedPrefHelper;
 import com.srit.market.home.ui.orders.OrderModel;
 
 import java.util.List;
@@ -47,6 +48,13 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<OrderDetailsAdapte
         ItemOrderDetailsBinding binding =
                 DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
                         R.layout.item_order_details, viewGroup, false);
+        if (SharedPrefHelper.getInstance().getLanguage()){
+            binding.units.setText(R.string.ar_units);
+            binding.price.setText(R.string.ar_price);
+        }else{
+            binding.units.setText(R.string.en_units);
+            binding.price.setText(R.string.en_price);
+        }
         return new OrderDetailsAdapter.ViewHolder(binding);
     }
 

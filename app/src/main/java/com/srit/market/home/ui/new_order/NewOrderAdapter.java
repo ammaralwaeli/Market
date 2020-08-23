@@ -13,6 +13,7 @@ import com.srit.market.R;
 import com.srit.market.databinding.ItemCategoryItemBinding;
 import com.srit.market.databinding.ItemNewOrderBinding;
 import com.srit.market.db.OrderItem;
+import com.srit.market.helpers.SharedPrefHelper;
 import com.srit.market.home.ui.home.item.ItemModel;
 
 import java.util.List;
@@ -49,6 +50,13 @@ public class NewOrderAdapter extends RecyclerView.Adapter<NewOrderAdapter.ViewHo
         ItemNewOrderBinding binding =
                 DataBindingUtil.inflate(LayoutInflater.from(viewGroup.getContext()),
                         R.layout.item_new_order, viewGroup, false);
+        if (SharedPrefHelper.getInstance().getLanguage()){
+            binding.units.setText(R.string.ar_units);
+            binding.price.setText(R.string.ar_price);
+        }else{
+            binding.units.setText(R.string.en_units);
+            binding.price.setText(R.string.en_price);
+        }
         return new NewOrderAdapter.ViewHolder(binding);
     }
 
